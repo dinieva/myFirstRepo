@@ -1,4 +1,4 @@
-const title;
+let title;
 let screens;
 let screenPrice;
 let rollback;
