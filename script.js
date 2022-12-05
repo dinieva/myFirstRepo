@@ -19,5 +19,38 @@ console.log('Стоимость разработки сайта ' + fullPrice + 
 let screensArr = screens.toLowerCase().split(',');
 console.log(screensArr);
 
+/* let devEarnings = fullPrice * (rollback/100);
+console.log('Процент отката посреднику за работу составляет '+ devEarnings); */
+
+// lesson 3
+title = prompt('Как называется ваш проект?');
+screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные, Интерактивные');
+screenPrice = +prompt('Сколько будет стоить данная работа?', 12000);
+adaptive = confirm('Нужен ли адаптив на сайте?');
+
+let service1 = prompt('Какой дополнительный тип услуги нужен?');
+let  servicePrice1 = +prompt('Сколько это будет стоить?');
+
+let service2 = prompt('Какой дополнительный тип услуги нужен?');
+let servicePrice2 = +prompt('Сколько это будет стоить?');
+
+fullPrice = screenPrice + servicePrice1 + servicePrice2;
+
 let devEarnings = fullPrice * (rollback/100);
-console.log('Процент отката посреднику за работу составляет '+ devEarnings);
+console.log('Стоимость отката посреднику ' + devEarnings);
+
+let servicePercentPrice = Math.ceil(fullPrice - devEarnings);
+console.log('Стоимость за вычетом отката посреднику ' + servicePercentPrice);
+
+if(fullPrice >= 30000){
+    fullPrice = fullPrice - (fullPrice * 10 / 100);
+    console.log('Общая стоимость с учетом скидки 10% ' + fullPrice);
+} else if (fullPrice >= 15000 && fullPrice < 30000){
+    fullPrice = fullPrice - (fullPrice * 5 / 100);
+    console.log('Общая стоимость с учетом скидки 5% ' + fullPrice);
+}  else if (fullPrice > 0 && fullPrice < 15000){
+    console.log('Скидка не предусмотрена');
+} else if (fullPrice <= 0) {
+    console.log('Что то пошло не так');
+}
+
