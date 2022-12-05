@@ -16,7 +16,7 @@ console.log(screens.length);
 console.log('Стоимость верстки экранов ' + screenPrice + '  рублей');
 console.log('Стоимость разработки сайта ' + fullPrice + ' рублей');
 
-let screensArr = screens.toLowerCase().split(',');
+let screensArr = screens.toLowerCase().split(', ');
 console.log(screensArr);
 
 /* let devEarnings = fullPrice * (rollback/100);
