@@ -31,7 +31,7 @@ const getRollbackMessage = function (price) {
     }
 };
 
-function getAllServicePrices(price1, price2) {
+const allServicePrices = function getAllServicePrices(price1, price2) {
     return price1 + price2;
 }
 
@@ -48,7 +48,7 @@ function getTitle(str) {
 }
 // блок функционала, функциональный блок
 screensArr = screens.toLowerCase().split(', ');
-const allServicePrices = getAllServicePrices(servicePrice1, servicePrice2);
+allServicePrices(servicePrice1, servicePrice2);
 fullPrice = getFullPrice(screenPrice, allServicePrices);
 devEarnings = fullPrice * (rollback/100); // Процент отката посреднику за работу 
 servicePercentPrice = getServicePercentPrices(fullPrice, devEarnings);
