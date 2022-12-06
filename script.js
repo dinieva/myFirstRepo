@@ -33,7 +33,7 @@ const getRollbackMessage = function (price) {
 
 const allServicePrices = function getAllServicePrices(price1, price2) {
     return price1 + price2;
-}
+};
 
 function getFullPrice(price1, price2) {
     return price1 + price2;
