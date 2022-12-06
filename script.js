@@ -9,11 +9,11 @@ let servicePrice1 = +prompt('Сколько это будет стоить?');
 let service2 = prompt('Какой дополнительный тип услуги нужен?');
 let servicePrice2 = +prompt('Сколько это будет стоить?');
 let rollback = 10;
+let fullPrice;
+let servicePercentPrice;
+let screensArr;
+let devEarnings;
 
-let screensArr = screens.toLowerCase().split(', ');
-let fullPrice = screenPrice + servicePrice1 + servicePrice2;
-let devEarnings = fullPrice * (rollback/100);
-let servicePercentPrice = Math.ceil(fullPrice - devEarnings);
 // блок описания функции
 const showTypeof = function (variable) {
     console.log(variable, typeof variable);
@@ -31,20 +31,33 @@ const getRollbackMessage = function (price) {
     }
 };
 
+function getAllServicePrices(price1, price2) {
+    return price1 + price2;
+}
+
+function getFullPrice(price1, price2) {
+    return price1 + price2;
+}
+
+function getServicePercentPrices(price1, price2) {
+    return price1 - price2;
+}
+
+function getTitle(str) {
+    return  str.trim()[0].toUpperCase() + str.toLowerCase().slice(1);
+}
+// блок функционала, функциональный блок
+screensArr = screens.toLowerCase().split(', ');
+const allServicePrices = getAllServicePrices(servicePrice1, servicePrice2);
+fullPrice = getFullPrice(screenPrice, allServicePrices);
+devEarnings = fullPrice * (rollback/100); // Процент отката посреднику за работу 
+servicePercentPrice = getServicePercentPrices(fullPrice, devEarnings);
+
+// блок вывода в консоль, мусорный блок
 showTypeof(title);
 showTypeof(screenPrice);
 showTypeof(adaptive);
-// блок функционала, функциональный блок
 
-
-// блок вывода в консоль, мусорный блок
-console.log(typeof title);
-console.log(typeof fullPrice);
-console.log(typeof adaptive);
 console.log(screensArr);
-console.log(screens.length);
 console.log(getRollbackMessage(fullPrice));
-console.log('Стоимость верстки экранов ' + screenPrice + '  рублей');
-console.log('Стоимость разработки сайта ' + fullPrice + ' рублей');
-console.log('Стоимость отката посреднику ' + devEarnings);
-console.log('Стоимость за вычетом отката посреднику ' + servicePercentPrice);
+console.log(servicePercentPrice);
