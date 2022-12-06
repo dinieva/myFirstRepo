@@ -48,8 +48,7 @@ function getTitle(str) {
 }
 // блок функционала, функциональный блок
 screensArr = screens.toLowerCase().split(', ');
-allServicePrices(servicePrice1, servicePrice2);
-fullPrice = getFullPrice(screenPrice, allServicePrices);
+fullPrice = getFullPrice(screenPrice, allServicePrices(servicePrice1, servicePrice2));
 devEarnings = fullPrice * (rollback/100); // Процент отката посреднику за работу 
 servicePercentPrice = getServicePercentPrices(fullPrice, devEarnings);
 
