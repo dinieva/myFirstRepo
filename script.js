@@ -1,33 +1,31 @@
 //'use strict';
 // блок объявления переменных
-let title;
-let screens;
-let screenPrice;
-let adaptive;
-let rollback = 10;
-let service1;
-let service2;
-let allServicePrices;
-let fullPrice;
-let servicePercentPrice;
-let screensArr;
-let devEarnings;
-
+const appData = {
+     title: '',
+     screens: '',
+     screenPrice: 0,
+     adaptive: true,
+     rollback: 10,
+     service1: '',
+     service2: '',
+     allServicePrices: 0,
+     fullPrice: 0,
+     servicePercentPrice: 0,
+     devEarnings: 0,
+     asking: function() {
+        appData.title = prompt('Как называется ваш проект?', 'Калькулятор верстки');
+        appData.screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные, Интерактивные');
+    
+        do {
+            appData.screenPrice = prompt('Сколько будет стоить данная работа?');
+        } while (!isNumber(appData.screenPrice));
+    
+        appData.adaptive = confirm('Нужен ли адаптив на сайте?');
+    }
+};
 // блок описания функции
 const isNumber = function(num) {
     return !isNaN(parseFloat(num)) && isFinite(num) && num[0] !== ' ';
-};
-
-const asking = function() {
-    title = prompt('Как называется ваш проект?', 'Калькулятор верстки');
-    screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные, Интерактивные');
-
-    screenPrice = prompt('Сколько будет стоить данная работа?');
-    do {
-        screenPrice = prompt('Сколько будет стоить данная работа?');
-    } while (!isNumber(screenPrice));
-
-    adaptive = confirm('Нужен ли адаптив на сайте?');
 };
 
 const getAllServicePrices = function(){
@@ -36,9 +34,9 @@ const getAllServicePrices = function(){
     for (let i = 0; i < 2; i++) {
 
         if (i === 0) {
-            service1 = prompt('Какой дополнительный тип услуги нужен?');
+            appData.service1 = prompt('Какой дополнительный тип услуги нужен?');
         } else if (i === 1) {
-            service2 = prompt('Какой дополнительный тип услуги нужен?');
+            appData.service2 = prompt('Какой дополнительный тип услуги нужен?');
         }
         let ask =  prompt('Сколько это будет стоить?');
         while(!isNumber(ask)) {
@@ -48,9 +46,6 @@ const getAllServicePrices = function(){
     }
 
     return sum;
-};
-const showTypeof = function (variable) {
-    console.log(variable, typeof variable);
 };
 
 const getRollbackMessage = function (price) {
@@ -74,24 +69,17 @@ function getServicePercentPrices(price1, price2) {
 }
 
 const getTitle = function () {
-    return  title.trim()[0].toUpperCase() + title.trim().toLowerCase().slice(1);
+    return  appData.title.trim()[0].toUpperCase() + appData.title.trim().toLowerCase().slice(1);
 };
 // блок функционала, функциональный блок
-asking();
-allServicePrices = getAllServicePrices();
-fullPrice = getFullPrice(+screenPrice, allServicePrices);
-devEarnings = fullPrice * (rollback/100); // Процент отката посреднику за работу 
-servicePercentPrice = getServicePercentPrices(fullPrice, devEarnings);
-title = getTitle();
-screensArr = screens.toLowerCase().split(', ');
+appData.asking();
+appData.allServicePrices = getAllServicePrices();
+appData.fullPrice = getFullPrice(+appData.screenPrice, appData.allServicePrices);
+appData.devEarnings = appData.fullPrice * (appData.rollback/100); // Процент отката посреднику за работу 
+appData.servicePercentPrice = getServicePercentPrices(appData.fullPrice, appData.devEarnings);
+appData.title = getTitle();
+//screensArr = screens.toLowerCase().split(', ');
 
 // блок вывода в консоль, мусорный блок
-showTypeof(title);
-showTypeof(screenPrice);
-showTypeof(adaptive);
-
-console.log('allServicePrices', allServicePrices);
-console.log(screensArr);
-console.log(getRollbackMessage(fullPrice));
-console.log(servicePercentPrice);
-
+console.log(appData.fullPrice);
+console.log(appData.servicePercentPrice);
