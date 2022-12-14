@@ -24,8 +24,10 @@ adv.remove();
 
 chaptersOfBookNum2[3].after(chaptersOfBookNum2[6]);
 chaptersOfBookNum2[6].after(chaptersOfBookNum2[8]);
+chaptersOfBookNum2[9].after(chaptersOfBookNum2[2]);
 
 chaptersOfBookNum5[3].before(chaptersOfBookNum5[9]);
 chaptersOfBookNum5[4].after(chaptersOfBookNum5[2]);
+chaptersOfBookNum5[7].after(chaptersOfBookNum5[5]);
 
 contentsBooksNum6[8].after(addChapter8inBooksNum6);
