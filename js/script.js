@@ -1,19 +1,16 @@
 'use strict';
 const title = document.getElementsByTagName('header > h1');
-const btnStart = document.getElementsByClassName('handler_btn[0]');
-const btnReset = document.getElementsByClassName('handler_btn[1]');
+const btns = document.getElementsByClassName('handler_btn');
+const btnStart = btns[0];
+const btnReset = btns[1];
 const btnPlus = document.querySelector('.screen-btn');
-const itemsPercent = document.querySelectorAll('.other-items percent');
-const itemsNumber = document.querySelectorAll('.other-items number');
+const itemsPercent = document.querySelectorAll('.other-items .percent');
+const itemsNumber = document.querySelectorAll('.other-items .number');
 const rollback = document.querySelector('.rollback');
-const inputRange = rollback.querySelector('[type=range]');
+const inputRange = rollback.querySelector('[type="range"]');
 const spanRangeValue = rollback.querySelector('.range-value');
 const inputsTotal = document.getElementsByClassName('total-input');
 let blocks = document.querySelectorAll('.screen');
-console.log(title);
-console.log(btnStart);
-console.log(btnReset);
-console.log(btnPlus);
 
 const appData = {
     title: '',
