@@ -34,44 +34,20 @@ const appData = {
     servicesNumber: {},
     init: function () {
         appData.addTitle();
-        appData.checkScreens();
         appData.rollbackRange();
-
         btnPlus.addEventListener('click', appData.addScreenBlock);
+        appData.checkScreens();
     },
     addTitle: function () {
         document.title = title.textContent;
     },
 
-    // кнопка Рассчитать не активна
-    checkScreens: function () {
-        screens.forEach(function (screen) {
-            const select = screen.querySelector('select');
-            const input = screen.querySelector('input');
-            const selectName = select.options[select.selectedIndex].textContent;
-
-            btnStart.setAttribute('disabled', '');
-
-            let check = function () {
-                if (selectName && input.value) {
-                    btnStart.removeAttribute('disabled', '');
-                    btnStart.addEventListener('click', appData.start);
-                    console.log('все сработало');
-                } else {
-                    btnStart.setAttribute('disabled', '');
-                }
-            };
-
-            screen.addEventListener('change', check);
-        });
-    },
     start: function () {
         appData.addScreens();
         appData.addServices();
         //appData.rollbackRange();
         appData.addPrices();
         appData.showResult();
-
 
         /* 
          appData.getServicePercentPrices();
@@ -84,6 +60,7 @@ const appData = {
         totalCountRollback.value = appData.servicePercentPrice;
 
     },
+
     addScreens: function () {
         screens = document.querySelectorAll('.screen');
 
@@ -124,12 +101,34 @@ const appData = {
     },
     addScreenBlock: function () {
         const cloneScreen = screens[0].cloneNode(true);
-
         screens[screens.length - 1].after(cloneScreen);
+
+        btnStart.setAttribute('disabled', '');
         appData.checkScreens();
     },
+    // кнопка Рассчитать не активна
+    checkScreens: function () {
+        screens = document.querySelectorAll('.screen');
+
+        screens.forEach(function (screen) {
+            const select = screen.querySelector('select');
+            const input = screen.querySelector('input');
+            const selectName = select.options[select.selectedIndex].textContent;
+            btnStart.setAttribute('disabled', '');
+            let check = function () {
+                if (selectName && input.value) {
+                    btnStart.removeAttribute('disabled', '');
+                    btnStart.addEventListener('click', appData.start);
+                } else {
+                    btnStart.setAttribute('disabled', '');
+                }
+            };
+
+            screen.addEventListener('change', check);
+        });
+    },
     rollbackRange: function () {
-        inputRange.addEventListener('mousemove', function () {
+        inputRange.addEventListener('input', function () {
             inputRangeValue.textContent = inputRange.value + '%';
             appData.rollback = inputRange.value;
         });
