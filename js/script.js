@@ -25,7 +25,7 @@ const appData = {
     screens: [],
     screenPrice: 0,
     adaptive: true,
-    rollback: 10,
+    rollback: 0,
     servicePricesPercent: 0,
     servicePricesNumber: 0,
     fullPrice: 0,
@@ -33,7 +33,6 @@ const appData = {
     servicesPercent: {},
     servicesNumber: {},
     init: function () {
-        btnStart.setAttribute('disabled', '');
         appData.addTitle();
         appData.checkScreens();
         appData.rollbackRange();
@@ -51,7 +50,9 @@ const appData = {
             const input = screen.querySelector('input');
             const selectName = select.options[select.selectedIndex].textContent;
 
-            screen.addEventListener('change', function () {
+            btnStart.setAttribute('disabled', '');
+
+            let check = function () {
                 if (selectName && input.value) {
                     btnStart.removeAttribute('disabled', '');
                     btnStart.addEventListener('click', appData.start);
@@ -59,16 +60,19 @@ const appData = {
                 } else {
                     btnStart.setAttribute('disabled', '');
                 }
-            });
+            };
+
+            screen.addEventListener('change', check);
         });
     },
     start: function () {
         appData.addScreens();
         appData.addServices();
+        //appData.rollbackRange();
         appData.addPrices();
         appData.showResult();
 
-        //appData.rollbackRange();
+
         /* 
          appData.getServicePercentPrices();
          appData.logger(); */
@@ -148,7 +152,6 @@ const appData = {
         for (let elem of appData.screens) {
             totalCount.value = +totalCount.value + elem.count;
         }
-
 
     },
 
