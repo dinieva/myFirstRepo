@@ -16,7 +16,7 @@ const total = document.getElementsByClassName('total-input')[0];
 const totalCount = document.getElementsByClassName('total-input')[1];
 const totalCountOther = document.getElementsByClassName('total-input')[2];
 const fullTotalCount = document.getElementsByClassName('total-input')[3];
-const totalCountRollback = document.getElementsByClassName('total-input')[4];
+let totalCountRollback = document.getElementsByClassName('total-input')[4];
 
 let screens = document.querySelectorAll('.screen');
 
@@ -45,13 +45,9 @@ const appData = {
     start: function () {
         appData.addScreens();
         appData.addServices();
-        //appData.rollbackRange();
         appData.addPrices();
         appData.showResult();
-
-        /* 
-         appData.getServicePercentPrices();
-         appData.logger(); */
+        appData.rollbackRange();
     },
     showResult: function () {
         total.value = appData.screenPrice;
@@ -128,11 +124,24 @@ const appData = {
         });
     },
     rollbackRange: function () {
+        totalCountRollback = document.getElementsByClassName('total-input')[4];
+
         inputRange.addEventListener('input', function () {
             inputRangeValue.textContent = inputRange.value + '%';
             appData.rollback = inputRange.value;
+            appData.rollbackCount();
+
         });
     },
+
+    rollbackCount: function () {
+        if (appData.rollback > 0) {
+            totalCountRollback.value = fullTotalCount.value - (fullTotalCount.value * appData.rollback / 100);
+        } else {
+            totalCountRollback.value = fullTotalCount.value;
+        }
+    },
+
     addPrices: function () {
         appData.screenPrice = appData.screens.reduce((sum, screen) => sum + (+screen.price), 0);
 
