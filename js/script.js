@@ -8,6 +8,9 @@ const btns = document.getElementsByClassName('handler_btn');
 const btnStart = btns[0];
 const btnReset = btns[1];
 
+const cmsWrapper = document.querySelector('.cms');
+const cmsOpen = document.getElementById('cms-open');
+
 const rollback = document.querySelector('.rollback');
 const inputRange = rollback.querySelector('[type="range"]');
 const inputRangeValue = rollback.querySelector('.range-value');
@@ -28,6 +31,7 @@ const appData = {
     rollback: 0,
     servicePricesPercent: 0,
     servicePricesNumber: 0,
+    servicePricesPercentCMS: 0,
     fullPrice: 0,
     servicePercentPrice: 0,
     servicesPercent: {},
@@ -36,6 +40,7 @@ const appData = {
         this.addTitle();
         this.rollbackRange();
         btnPlus.addEventListener('click', appData.addScreenBlock);
+
         this.checkScreens();
     },
     addTitle: function () {
@@ -48,6 +53,42 @@ const appData = {
         appData.addPrices();
         appData.showResult();
         appData.rollbackRange();
+
+    },
+
+    cmsOpenBlock: function () {
+        const cmsVariants = document.querySelector('.hidden-cms-variants');
+        const cmsSelect = document.querySelector('#cms-select');
+        const cmsOptions = cmsSelect.querySelectorAll('option');
+        const cmsSelectName = cmsSelect.options[cmsSelect.selectedIndex].textContent;
+        const mainControlInput = cmsVariants.querySelector('.main-controls__input');
+        const input = mainControlInput.querySelector('#cms-other-input');
+
+        let displayCmsVariants = () => {
+            if (cmsOpen.checked) {
+                cmsVariants.style.display = 'flex';
+            } else {
+                cmsVariants.style.display = 'none';
+                input.value = '';
+            }
+
+            cmsOptions.forEach(item => {
+                if (cmsSelectName === 'Другое') {
+                    mainControlInput.style.display = 'block';
+                } else {
+                    mainControlInput.style.display = 'none';
+                }
+            });
+
+            input.addEventListener('change', () => {
+                appData.servicePricesPercentCMS += Number(input.value);
+                console.log(appData.servicePricesPercentCMS);
+            });
+
+        };
+
+        displayCmsVariants();
+
     },
 
     blockScreens: function () {
@@ -67,7 +108,6 @@ const appData = {
             const check = item.querySelector('input[type=checkbox]');
             check.setAttribute('disabled', '');
         });
-        const cmsOpen = document.getElementById('cms-open');
         cmsOpen.setAttribute('disabled', '');
         btnStart.style.display = 'none';
         btnReset.style.display = 'block';
@@ -102,9 +142,11 @@ const appData = {
             check.checked = false;
         });
 
-        const cmsOpen = document.getElementById('cms-open');
         cmsOpen.removeAttribute('disabled', '');
         cmsOpen.checked = false;
+        appData.servicePricesPercentCMS = 0;
+        appData.cmsOpenBlock();
+
 
         btnStart.style.display = 'block';
         btnReset.style.display = 'none';
@@ -120,17 +162,14 @@ const appData = {
     },
 
     showResult: function () {
-        total.value = this.screenPrice;
-        totalCountOther.value = this.servicePricesPercent + this.servicePricesNumber;
-        fullTotalCount.value = this.fullPrice;
-        totalCountRollback.value = this.servicePercentPrice;
+        total.value = appData.screenPrice;
+        totalCountOther.value = appData.servicePricesPercent + appData.servicePricesNumber + appData.servicePricesCMS;
+        fullTotalCount.value = appData.fullPrice;
+        totalCountRollback.value = appData.servicePercentPrice;
 
     },
 
     addScreens: function () {
-        //screens = document.querySelectorAll('.screen');
-        appData.screens.length = 0;
-
         screens.forEach((screen, index) => {
             const select = screen.querySelector('select');
             const input = screen.querySelector('input');
@@ -172,7 +211,7 @@ const appData = {
         btnStart.setAttribute('disabled', '');
         appData.checkScreens();
     },
-    // кнопка Рассчитать не активна
+
     checkScreens: function () {
         screens = document.querySelectorAll('.screen');
 
@@ -227,7 +266,10 @@ const appData = {
             appData.servicePricesPercent += appData.screenPrice * (appData.servicesPercent[key] / 100);
         }
 
-        appData.fullPrice = +appData.screenPrice + appData.servicePricesPercent + appData.servicePricesNumber;
+        appData.servicePricesCMS = +appData.screenPrice * appData.servicePricesPercentCMS / 100;
+        console.log(appData.servicePricesCMS + '=' + appData.screenPrice + '*' + appData.servicePricesPercentCMS);
+
+        appData.fullPrice = +appData.screenPrice + appData.servicePricesNumber + appData.servicePricesPercent + appData.servicePricesCMS;
 
         appData.servicePercentPrice = appData.fullPrice - (appData.fullPrice * (appData.rollback / 100));
 
@@ -246,3 +288,4 @@ const appData = {
 };
 
 appData.init();
+cmsWrapper.addEventListener('change', appData.cmsOpenBlock);
