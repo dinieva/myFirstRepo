@@ -32,6 +32,7 @@ const appData = {
     servicePricesPercent: 0,
     servicePricesNumber: 0,
     servicePricesPercentCMS: 0,
+    servicePricesCMS: 0,
     fullPrice: 0,
     servicePercentPrice: 0,
     servicesPercent: {},
@@ -81,6 +82,7 @@ const appData = {
             });
 
             input.addEventListener('change', () => {
+                console.log(appData.servicePricesPercentCMS);
                 appData.servicePricesPercentCMS += Number(input.value);
                 console.log(appData.servicePricesPercentCMS);
             });
@@ -145,6 +147,7 @@ const appData = {
         cmsOpen.removeAttribute('disabled', '');
         cmsOpen.checked = false;
         appData.servicePricesPercentCMS = 0;
+        appData.servicePricesCMS = 0;
         appData.cmsOpenBlock();
 
 
@@ -266,7 +269,8 @@ const appData = {
             appData.servicePricesPercent += appData.screenPrice * (appData.servicesPercent[key] / 100);
         }
 
-        appData.servicePricesCMS = +appData.screenPrice * appData.servicePricesPercentCMS / 100;
+        appData.servicePricesCMS = +appData.screenPrice * (appData.servicePricesPercentCMS / 100);
+
         console.log(appData.servicePricesCMS + '=' + appData.screenPrice + '*' + appData.servicePricesPercentCMS);
 
         appData.fullPrice = +appData.screenPrice + appData.servicePricesNumber + appData.servicePricesPercent + appData.servicePricesCMS;
