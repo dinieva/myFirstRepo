@@ -33,10 +33,10 @@ const appData = {
     servicesPercent: {},
     servicesNumber: {},
     init: function () {
-        appData.addTitle();
-        appData.rollbackRange();
+        this.addTitle();
+        this.rollbackRange();
         btnPlus.addEventListener('click', appData.addScreenBlock);
-        appData.checkScreens();
+        this.checkScreens();
     },
     addTitle: function () {
         document.title = title.textContent;
@@ -49,18 +49,89 @@ const appData = {
         appData.showResult();
         appData.rollbackRange();
     },
+
+    blockScreens: function () {
+
+        screens.forEach(screen => {
+            const select = screen.querySelector('select');
+            const input = screen.querySelector('input');
+            select.setAttribute('disabled', '');
+            input.setAttribute('disabled', '');
+            btnPlus.setAttribute('disabled', '');
+        });
+        otherItemsPercent.forEach(item => {
+            const check = item.querySelector('input[type=checkbox]');
+            check.setAttribute('disabled', '');
+        });
+        otherItemsNumber.forEach(item => {
+            const check = item.querySelector('input[type=checkbox]');
+            check.setAttribute('disabled', '');
+        });
+        const cmsOpen = document.getElementById('cms-open');
+        cmsOpen.setAttribute('disabled', '');
+        btnStart.style.display = 'none';
+        btnReset.style.display = 'block';
+
+        btnReset.addEventListener('click', appData.reset);
+
+    },
+
+    reset: function () {
+        screens = document.querySelectorAll('.screen');
+
+        //appData.screens.length = 0;
+        screens.forEach(screen => {
+            const select = screen.querySelector('select');
+            const input = screen.querySelector('input');
+            select.removeAttribute('disabled', '');
+            input.removeAttribute('disabled', '');
+            btnPlus.removeAttribute('disabled', '');
+            input.value = '';
+            select.options[0].selected = 'selected';
+        });
+
+        otherItemsPercent.forEach(item => {
+            const check = item.querySelector('input[type=checkbox]');
+            check.removeAttribute('disabled', '');
+            check.checked = false;
+        });
+
+        otherItemsNumber.forEach(item => {
+            const check = item.querySelector('input[type=checkbox]');
+            check.removeAttribute('disabled', '');
+            check.checked = false;
+        });
+
+        const cmsOpen = document.getElementById('cms-open');
+        cmsOpen.removeAttribute('disabled', '');
+        cmsOpen.checked = false;
+
+        btnStart.style.display = 'block';
+        btnReset.style.display = 'none';
+
+        //screens.length = 0;
+        //screens.splice(1, screen.length - 1);
+        total.value = '';
+        totalCount.value = '';
+        totalCountOther.value = '';
+        fullTotalCount.value = '';
+        totalCountRollback.value = '';
+
+    },
+
     showResult: function () {
-        total.value = appData.screenPrice;
-        totalCountOther.value = appData.servicePricesPercent + appData.servicePricesNumber;
-        fullTotalCount.value = appData.fullPrice;
-        totalCountRollback.value = appData.servicePercentPrice;
+        total.value = this.screenPrice;
+        totalCountOther.value = this.servicePricesPercent + this.servicePricesNumber;
+        fullTotalCount.value = this.fullPrice;
+        totalCountRollback.value = this.servicePercentPrice;
 
     },
 
     addScreens: function () {
-        screens = document.querySelectorAll('.screen');
+        //screens = document.querySelectorAll('.screen');
+        appData.screens.length = 0;
 
-        screens.forEach(function (screen, index) {
+        screens.forEach((screen, index) => {
             const select = screen.querySelector('select');
             const input = screen.querySelector('input');
             const selectName = select.options[select.selectedIndex].textContent;
@@ -72,10 +143,9 @@ const appData = {
                 count: +input.value,
             });
         });
-        console.log(appData.screens);
     },
     addServices: function () {
-        otherItemsPercent.forEach(function (item) {
+        otherItemsPercent.forEach(item => {
             const check = item.querySelector('input[type=checkbox]');
             const label = item.querySelector('label');
             const input = item.querySelector('input[type=text]');
@@ -85,7 +155,7 @@ const appData = {
             }
         });
 
-        otherItemsNumber.forEach(function (item) {
+        otherItemsNumber.forEach(item => {
             const check = item.querySelector('input[type=checkbox]');
             const label = item.querySelector('label');
             const input = item.querySelector('input[type=text]');
@@ -106,15 +176,19 @@ const appData = {
     checkScreens: function () {
         screens = document.querySelectorAll('.screen');
 
-        screens.forEach(function (screen) {
+        screens.forEach((screen) => {
             const select = screen.querySelector('select');
             const input = screen.querySelector('input');
             const selectName = select.options[select.selectedIndex].textContent;
             btnStart.setAttribute('disabled', '');
-            let check = function () {
+            let check = () => {
                 if (selectName && input.value) {
                     btnStart.removeAttribute('disabled', '');
-                    btnStart.addEventListener('click', appData.start);
+                    // btnStart.addEventListener('click', appData.start);
+                    btnStart.addEventListener('click', () => {
+                        appData.start();
+                        appData.blockScreens();
+                    });
                 } else {
                     btnStart.setAttribute('disabled', '');
                 }
@@ -126,7 +200,7 @@ const appData = {
     rollbackRange: function () {
         totalCountRollback = document.getElementsByClassName('total-input')[4];
 
-        inputRange.addEventListener('input', function () {
+        inputRange.addEventListener('input', () => {
             inputRangeValue.textContent = inputRange.value + '%';
             appData.rollback = inputRange.value;
             appData.rollbackCount();
