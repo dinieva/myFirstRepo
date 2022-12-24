@@ -43,24 +43,28 @@ const appData = {
     init: function () {
         this.addTitle();
         this.rollbackRange();
-        btnPlus.addEventListener('click', appData.addScreenBlock);
-        btnStart.addEventListener('click', () => {
-            this.start();
-            this.blockScreens();
-        });
+        btnPlus.addEventListener('click', this.addScreenBlock);
+        btnStart.addEventListener('click', this.checkScreens.bind(this));
 
         this.checkScreens();
+        cmsWrapper.addEventListener('change', this.cmsOpenBlock);
+        btnReset.addEventListener('click', this.reset.bind(this));
+        cmsOtherInput.addEventListener('change', () => {
+            appData.servicePricesPercentCMS = +cmsOtherInput.value;
+        });
     },
     addTitle: function () {
         document.title = title.textContent;
     },
 
     start: function () {
-        appData.addScreens();
-        appData.addServices();
-        appData.addPrices();
-        appData.showResult();
-        appData.rollbackRange();
+        this.addScreens();
+        this.addServices();
+        this.addPrices();
+        this.showResult();
+        this.rollbackRange();
+
+        this.blockScreens();
 
     },
 
@@ -70,31 +74,21 @@ const appData = {
         const mainControlInput = cmsVariants.querySelector('.main-controls__input');
         //const input = mainControlInput.querySelector('#cms-other-input');
 
-        let displayCmsVariants = () => {
+        if (cmsOpen.checked) {
+            cmsVariants.style.display = 'flex';
+        } else {
+            cmsVariants.style.display = 'none';
+            cmsOtherInput.value = '';
+        }
 
-            if (cmsOpen.checked) {
-                cmsVariants.style.display = 'flex';
+        cmsOptions.forEach(item => {
+            if (cmsSelectName === 'Другое') {
+                mainControlInput.style.display = 'block';
             } else {
-                cmsVariants.style.display = 'none';
-                cmsOtherInput.value = '';
+                mainControlInput.style.display = 'none';
             }
+        });
 
-            cmsOptions.forEach(item => {
-                if (cmsSelectName === 'Другое') {
-                    mainControlInput.style.display = 'block';
-                } else {
-                    mainControlInput.style.display = 'none';
-                }
-            });
-            cmsOtherInput.addEventListener('change', () => {
-                console.log(cmsOtherInput.value);
-                console.log(appData.servicePricesPercentCMS);
-                appData.servicePricesPercentCMS += Number(cmsOtherInput.value);
-                console.log(appData.servicePricesPercentCMS);
-            });
-        };
-
-        displayCmsVariants();
     },
 
     blockScreens: function () {
@@ -119,8 +113,6 @@ const appData = {
         cmsOtherInput.setAttribute('disabled', '');
         btnStart.style.display = 'none';
         btnReset.style.display = 'block';
-
-        btnReset.addEventListener('click', appData.reset);
 
     },
 
@@ -149,6 +141,8 @@ const appData = {
             check.checked = false;
         });
 
+        screens.forEach((item, index) => index !== 0 ? item.remove() : '');
+
         cmsOpen.removeAttribute('disabled', '');
         cmsOpen.checked = false;
         cmsSelect.options[0].selected = 'selected';
@@ -159,6 +153,8 @@ const appData = {
         btnStart.style.display = 'block';
         btnReset.style.display = 'none';
 
+        inputRange.value = 0;
+        inputRangeValue.textContent = inputRange.value + '%';
         total.value = '';
         totalCount.value = '';
         totalCountOther.value = '';
@@ -202,6 +198,7 @@ const appData = {
             });
         });
     },
+
     addServices: function () {
         otherItemsPercent.forEach(item => {
             const check = item.querySelector('input[type=checkbox]');
@@ -223,32 +220,28 @@ const appData = {
             }
         });
     },
+
     addScreenBlock: function () {
         const cloneScreen = screens[0].cloneNode(true);
         screens[screens.length - 1].after(cloneScreen);
 
-        btnStart.setAttribute('disabled', '');
-        appData.checkScreens();
+        // btnStart.setAttribute('disabled', '');
+        // appData.checkScreens();
     },
 
     checkScreens: function () {
         screens = document.querySelectorAll('.screen');
-
+        let flag = 0;
         screens.forEach((screen) => {
             const select = screen.querySelector('select');
             const input = screen.querySelector('input');
-            const selectName = select.options[select.selectedIndex].textContent;
-            btnStart.setAttribute('disabled', '');
-            let check = () => {
-                if (selectName && input.value) {
-                    btnStart.removeAttribute('disabled', '');
-                    // btnStart.addEventListener('click', appData.start);
-                } else {
-                    btnStart.setAttribute('disabled', '');
-                }
-            };
-            screen.addEventListener('change', check);
+            // const selectName = select.value;
+            //btnStart.setAttribute('disabled', '');
+            if (select.value === '') flag += 1;
+            if (input.value === '') flag += 1;
         });
+
+        if (flag === 0) this.start();
 
 
     },
@@ -273,6 +266,7 @@ const appData = {
         }
     },
 
+
     addPrices: function () {
         appData.screenPrice = appData.screens.reduce((sum, screen) => sum + (+screen.price), 0);
 
@@ -284,7 +278,7 @@ const appData = {
             appData.servicePricesPercent += appData.screenPrice * (appData.servicesPercent[key] / 100);
         }
 
-        appData.servicePricesCMS = +appData.screenPrice * (appData.servicePricesPercentCMS / 100);
+        appData.servicePricesCMS = (+appData.screenPrice * (appData.servicePricesPercentCMS / 100));
 
         console.log(appData.servicePricesCMS + '=' + appData.screenPrice + '*' + appData.servicePricesPercentCMS);
 
@@ -298,6 +292,10 @@ const appData = {
 
     },
 
+
+
+
+
     logger: function () {
         console.log(appData.fullPrice);
         console.log(appData.servicePercentPrice);
@@ -307,5 +305,4 @@ const appData = {
 };
 
 appData.init();
-cmsWrapper.addEventListener('change', appData.cmsOpenBlock);
 
